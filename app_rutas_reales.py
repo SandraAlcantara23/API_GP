@@ -16,11 +16,9 @@ def index():
 @app.route('/ruta', methods=['GET', 'POST'])
 def ruta():
     if request.method == 'GET':
-        # Si se hace GET, simplemente redirige a la página principal con la lista de lugares
         lugares = obtener_todos_lugares()
         return render_template("index_mejorado.html", lugares=sorted(lugares.keys()))
 
-    # Si es POST, procesar la ruta
     origen = request.form['origen']
     destino = request.form['destino']
     tipo_ruta = request.form.get('tipo_ruta', 'corta')
@@ -75,7 +73,7 @@ def ruta():
         # Crear mapa
         mapa = folium.Map(location=[20, -99], zoom_start=6)
 
-        # Cliente de OpenRouteService (REEMPLAZAR TU_API_KEY)
+        # Cliente de OpenRouteService
         client = openrouteservice.Client(key='5b3ce3597851110001cf624840ed8e401f1d4266be633afbc6408e60')
 
         for i in range(len(camino) - 1):
@@ -117,13 +115,27 @@ def ruta():
 
         mapa.save("static/mapa.html")
 
+        # Calcular gasolina y casetas
+        rendimiento_km_por_litro = 12  # km/l
+        precio_gasolina = 24  # MXN/litro
+        gasolina_gastada = distancia_total / rendimiento_km_por_litro
+        costo_gasolina = gasolina_gastada * precio_gasolina
+
+        # Estimar casetas: 1 cada 100 km, costo estimado $100
+        casetas_probables = int(distancia_total // 100)
+        costo_casetas = casetas_probables * 100
+
         return render_template(
             "resultado.html",
             camino=camino,
             distancia=round(distancia_total, 2),
             tiempo_total=f"{horas}h {minutos}min",
             tiempos_por_tramo=tiempos_por_tramo,
-            pois=pois
+            pois=pois,
+            gasolina_litros=round(gasolina_gastada, 2),
+            costo_gasolina=round(costo_gasolina, 2),
+            casetas=casetas_probables,
+            costo_casetas=costo_casetas
         )
 
     except Exception as e:

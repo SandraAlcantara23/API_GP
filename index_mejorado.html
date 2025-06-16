@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manhatna</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3d0e8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #2c3e50;
+    }
+
+    .container {
+      background: #ffffffcc; /* blanco semi-transparente */
+      max-width: 420px;
+      width: 100%;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 15px 30px rgba(44, 62, 80, 0.2);
+      backdrop-filter: saturate(180%) blur(12px);
+    }
+
+    h2 {
+      font-weight: 600;
+      font-size: 1.9rem;
+      margin-bottom: 25px;
+      text-align: center;
+      color: #1f3a93;
+      letter-spacing: 1.3px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* Inputs con iconos simples delante usando pseudo-elementos */
+
+    .input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-group input[type="text"],
+    .input-group select {
+      width: 100%;
+      padding: 12px 12px 12px 40px;
+      border-radius: 10px;
+      border: 1.8px solid #a9b8d1;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      color: #2c3e50;
+    }
+
+    .input-group input[type="text"]:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: #1f3a93;
+      box-shadow: 0 0 6px #1f3a93aa;
+      background-color: #fefefe;
+    }
+
+    /* Iconos Unicode */
+
+    .input-group.origen::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      font-size: 1.2rem;
+      color: #2980b9;
+    }
+
+    .input-group.destino::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      font-size: 1.2rem;
+      color: #27ae60;
+    }
+
+    .input-group.tipo_ruta::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      font-size: 1.2rem;
+      color: #34495e;
+    }
+
+    /* Checkbox grupo */
+
+    .poi-group {
+      margin-top: 10px;
+    }
+
+    .poi-group label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      color: #34495e;
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-wrapper label {
+      font-weight: 500;
+      color: #555;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
+      user-select: none;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #2980b9;
+      border-radius: 4px;
+    }
+
+    /* Botón */
+
+    button[type="submit"] {
+      background: linear-gradient(135deg, #1f3a93, #2980b9);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.15rem;
+      padding: 15px 0;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.35s ease;
+      box-shadow: 0 6px 12px #1f3a93aa;
+      letter-spacing: 1.1px;
+    }
+
+    button[type="submit"]:hover {
+      background: linear-gradient(135deg, #254baf, #1f3a93);
+      box-shadow: 0 8px 16px #1f3a93cc;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px 25px;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      button[type="submit"] {
+        font-size: 1rem;
+        padding: 13px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>GPS Manhatan:</h2>
+    <form action="/ruta" method="post">
+
+      <div class="input-group origen">
+        <label for="origen">Origen</label>
+        <input type="text" name="origen" id="origen" list="lugares" placeholder="Escribe el lugar de origen" required />
+      </div>
+
+      <div class="input-group destino">
+        <label for="destino">Destino</label>
+        <input type="text" name="destino" id="destino" list="lugares" placeholder="Escribe el lugar destino" required />
+      </div>
+
+      <datalist id="lugares">
+        {% for lugar in lugares %}
+          <option value="{{ lugar }}"></option>
+        {% endfor %}
+      </datalist>
+
+      <div class="input-group tipo_ruta">
+        <label for="tipo_ruta">Tipo de Ruta</label>
+        <select name="tipo_ruta" id="tipo_ruta">
+          <option value="corta">Corta distancia</option>
+          <option value="rapida">Rapida velocidad</option>
+          <option value="evitar_peajes">Evitar peajes</option>
+        </select>
+      </div>
+
+      <div class="poi-group">
+        <label>Mostrar puntos de interés:</label>
+        <div class="checkbox-wrapper">
+          <label><input type="checkbox" name="mostrar_pois" value="Gasolinera" /> Gasolineras</label>
+          <label><input type="checkbox" name="mostrar_pois" value="Restaurante" /> Restaurantes</label>
+          <label><input type="checkbox" name="mostrar_pois" value="Baño" /> Baños</label>
+        </div>
+      </div>
+
+      <button type="submit">Calcular:</button>
+    </form>
+  </div>
+</body>
+</html>
