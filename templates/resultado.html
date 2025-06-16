@@ -38,9 +38,13 @@
         <h2>Mapa de la ruta</h2>
         <iframe src="{{ url_for('static', filename='mapa.html') }}"></iframe>
 
-        <h3>Detalles de la ruta</h3>
+        <h3>DETALLES DE RUTA:</h3>
         <p><strong>Distancia total:</strong> {{ distancia }} km</p>
         <p><strong>Tiempo estimado:</strong> {{ tiempo_total }}</p>
+        <p><strong>Gasolina estimada:</strong> {{ gasolina_litros }} L</p>
+        <p><strong>Costo de gasolina:</strong> ${{ costo_gasolina }} MXN</p>
+        <p><strong>Número de casetas:</strong> {{ casetas }}</p>
+        <p><strong>Costo total de casetas:</strong> ${{ costo_casetas }} MXN</p>
 
         <h4>Tiempos por tramo</h4>
         <ul>
